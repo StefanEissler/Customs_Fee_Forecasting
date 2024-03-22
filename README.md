@@ -35,8 +35,11 @@ Die beste Performance auf Zeitreihendaten hatten X Modelle. Diese werden nun in 
 - numpy
 - matplotlib [https://matplotlib.org/stable/]
 - scikit-learn [https://scikit-learn.org/]
+- tensorflow / keras
 - statsmodels [https://www.statsmodels.org/devel/index.html]
+- sktime
 - flask [https://flask.palletsprojects.com/en/3.0.x/]
+
 
 
 ## Notizen:

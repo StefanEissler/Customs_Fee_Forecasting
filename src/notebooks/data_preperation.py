@@ -1,7 +1,9 @@
 import pandas as pd
+import numpy as np
 import csv
 import matplotlib.pyplot as plt
 from statsmodels.tsa.api import adfuller
+from sktime.performance_metrics.forecasting import MeanAbsoluteScaledError
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 # format the AEB_intern format to a dataframe with Abgabe, amount and date
@@ -40,16 +42,16 @@ def plot_forecast(model, start, train, test):
     ax.legend(['orig_train', 'orig_test', 'forecast'])
     plt.show()
     
-def get_validation_matrix(prediction, test):
+def get_validation_matrix(prediction, test, train):
     mae = mean_absolute_error(test, prediction)
     mse = mean_squared_error(test, prediction)
     r2 = r2_score(test, prediction) # beschreibt die "Anpassungsgüte einer Regression"
     forecast_bias = (prediction - test).mean()
     
-    naive_forecast = test.shift(1).dropna()
-    scaled_errors = abs(prediction - test) / abs(test - naive_forecast)
-    mean_MASE = scaled_errors.mean()
-    
+    mase = MeanAbsoluteScaledError()
+    mean_MASE = mase(y_true=test.values, y_pred=prediction.values, y_train=train.values)
+
+
     forecast_accuracy = (1 / mean_MASE) * 100 if mean_MASE != 0 else float('inf')
 
     
@@ -61,6 +63,8 @@ def get_validation_matrix(prediction, test):
         'Forecast Bias': forecast_bias,
         'Forecast Accuracy (%)': forecast_accuracy
     }
+    
+
     
 def save_metrics_to_csv(metrics):
     # Check if a file is generated already
@@ -79,7 +83,6 @@ def save_metrics_to_csv(metrics):
 
         if write_header:
             writer.writeheader()
-
         writer.writerow(metrics)
 
     print(f"Metrics saved to {filename}")

@@ -4,5 +4,6 @@ matplotlib
 scikit-learn
 tensorflow
 statsmodels
+sktime
 seaborn
 flask
