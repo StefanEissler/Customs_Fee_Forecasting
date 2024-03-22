@@ -1,8 +1,8 @@
 import pandas as pd
+import csv
 import matplotlib.pyplot as plt
 from statsmodels.tsa.api import adfuller
-
-
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 # format the AEB_intern format to a dataframe with Abgabe, amount and date
 def process_data(df, date_column, amount_column):
@@ -14,12 +14,11 @@ def process_data(df, date_column, amount_column):
     
     return merged_data
 
-
 # split data in train and test set
 def split_data(data, test_split):
-    l = len(data)
-    t_idx = round(l*(1-test_split))
-    train, test = data[ : t_idx], data[t_idx : ]
+    X = data
+    train_size = int(len(X) * test_split)
+    train, test = X[0:train_size], X[train_size:len(X)]
     print(f'train: {len(train)} , test: {len(test)}')
     return train, test
 
@@ -40,3 +39,58 @@ def plot_forecast(model, start, train, test):
     forecast.plot(ax=ax, style = '-.')
     ax.legend(['orig_train', 'orig_test', 'forecast'])
     plt.show()
+    
+def get_validation_matrix(prediction, test):
+    mae = mean_absolute_error(test, prediction)
+    mse = mean_squared_error(test, prediction)
+    r2 = r2_score(test, prediction) # beschreibt die "Anpassungsgüte einer Regression"
+    forecast_bias = (prediction - test).mean()
+    
+    naive_forecast = test.shift(1).dropna()
+    scaled_errors = abs(prediction - test) / abs(test - naive_forecast)
+    mean_MASE = scaled_errors.mean()
+    
+    forecast_accuracy = (1 / mean_MASE) * 100 if mean_MASE != 0 else float('inf')
+
+    
+    return {
+        'MAE': mae,
+        'MSE': mse,
+        'meanMASE': mean_MASE,
+        'r2': r2,
+        'Forecast Bias': forecast_bias,
+        'Forecast Accuracy (%)': forecast_accuracy
+    }
+    
+def save_metrics_to_csv(metrics):
+    # Check if a file is generated already
+    filename = 'metrics.csv'
+    try:
+        with open(filename, 'r') as f:
+            existing_metrics = csv.DictReader(f)
+            fieldnames = existing_metrics.fieldnames
+            write_header = False
+    except FileNotFoundError:
+        write_header = True
+
+    # Write the metrics to the CSV file
+    with open(filename, 'a', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames if not write_header else metrics.keys())
+
+        if write_header:
+            writer.writeheader()
+
+        writer.writerow(metrics)
+
+    print(f"Metrics saved to {filename}")
+    
+    
+def create_lags(data, lags_amount):
+    lagged_features = pd.DataFrame(index=data.index)
+    for i in range(1, lags_amount + 1):
+        lagged_features[f'lag_{i}'] = data['Abgabe'].shift(i)
+    return lagged_features
+
+def create_rolling_avg(data, window_size):
+    data = data.rolling(window=window_size).mean()
+    data = data.dropna(axis=1)

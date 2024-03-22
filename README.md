@@ -6,7 +6,11 @@
 
 ### Mit SSL Error WSL Ubuntu
 
-``pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt ``
+``pip install --trusted-host pypi.org --trusted-host=files.pythonhosted.org -r requirements.txt ``
+
+oder
+
+``pip install --trusted-host=pypi.org --trusted-host=files.pythonhosted.org [dependency]``
 
 ## Projektsturktur
 
@@ -39,4 +43,4 @@ Die beste Performance auf Zeitreihendaten hatten X Modelle. Diese werden nun in 
 
 Mögliche weitere Libaries:
 - sktime [https://sktime-backup.readthedocs.io/en/stable/examples/01_forecasting.html]
-
+- tensorflow [https://www.tensorflow.org/]
