@@ -6,11 +6,15 @@
 
 ### Mit SSL Error WSL Ubuntu
 
-``pip install --trusted-host pypi.org --trusted-host=files.pythonhosted.org -r requirements.txt ``
+``pip install --trusted-host pypi.org --trusted-host=files.pythonhosted.org -r requirements.txt``
 
 oder
 
 ``pip install --trusted-host=pypi.org --trusted-host=files.pythonhosted.org [dependency]``
+
+## Start Applikation
+
+``python3 src/app/api.py``
 
 ## Projektsturktur
 
