@@ -40,7 +40,6 @@ Die beste Performance auf Zeitreihendaten hatten X Modelle. Diese werden nun in 
 
 ### Request body
 
-`
 {
     "customerid": "example",    
     "modeltype": "ets",
@@ -59,7 +58,6 @@ Die beste Performance auf Zeitreihendaten hatten X Modelle. Diese werden nun in 
         }
     ]
 }
-`
 
 #### customerid
 - Kundenname
@@ -109,7 +107,7 @@ Die beste Performance auf Zeitreihendaten hatten X Modelle. Diese werden nun in 
 {
     "customerid": "example",
     "modeltype": "forest",
-    "horizon": "60"
+    "horizon": 60
 }
 `
 
@@ -135,7 +133,6 @@ Die beste Performance auf Zeitreihendaten hatten X Modelle. Diese werden nun in 
     Content-Length: 847
     Connection: close
 
-`
 {
     "data": {
         "2024-04-09": 23.424447619047598,
@@ -162,8 +159,6 @@ Die beste Performance auf Zeitreihendaten hatten X Modelle. Diese werden nun in 
     "message": "forest for example predicted successfully",
     "success": true
 }
-`
-
 
 ## Libaries
 

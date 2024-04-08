@@ -69,7 +69,6 @@ def selectModel(modeltype):
 
 def create_forecasting_horizon(horizon):
     current_date = pd.to_datetime('now')
-    horizon = pd.to_numeric(horizon)
     # Erstellen des Datumsindexes für den Horizon
     horizon_dates = pd.date_range(start=current_date, periods=horizon, freq='D') + pd.Timedelta(days=1)  # Beginnen Sie am nächsten Tag
     # Erstellen des DataFrame für den Forecast-Horizont
