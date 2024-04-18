@@ -5,7 +5,7 @@ scikit-learn
 tensorflow
 statsmodels
 sktime
-neuralforecast>=1.6.4
+neuralforecast
 pmdarima
 seaborn
 flask

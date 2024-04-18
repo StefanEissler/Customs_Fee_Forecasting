@@ -1,8 +1,6 @@
 import numpy as np
 import pandas as pd
 
-from models import ArimaModel, ETSModel, ForestModel, LTSMModel, RNNModel, XGBoostModel
-
 from sktime.transformations.series.lag import Lag
 from sktime.transformations.series.impute import Imputer
 
@@ -31,10 +29,11 @@ def prep_data(data):
     abgabe_pro_tag = abgabe_pro_tag.resample('D').asfreq().fillna(0)
     
     # Abgabe gleitender Durchschnitt
+    # Imputer?!
     abgabe_pro_tag['Abgabe_movavg'] = abgabe_pro_tag.Abgabe.rolling(window=7).mean()
     
     # Erstellen von lag features
-    t = Lag([2,4,6]) * Imputer("nearest")
+    t = Lag([2, 4, 6]) * Imputer("nearest")
     lags = t.fit_transform(abgabe_pro_tag.Abgabe_movavg.dropna())
     
     # Zusammenführung der Komponenten
@@ -49,23 +48,11 @@ def prep_data(data):
     df['Month'] = df.index.month
     df['Day'] = df.index.day
     
+    df['dayofweek'] = df.index.dayofweek
+    df['quarter'] = df.index.quarter
+    df['dayofyear'] = df.index.dayofyear
+    
     return df
-
-def selectModel(modeltype):
-    if modeltype == 'arima':
-        return ArimaModel()
-    elif modeltype == 'ets':
-        return ETSModel()
-    elif modeltype == 'forest':
-        return ForestModel()
-    elif modeltype == 'xgboost':
-        return XGBoostModel()
-    elif modeltype == 'rnn':
-        return RNNModel()
-    elif modeltype == 'lstm':
-        return LTSMModel()
-    else:
-        return None
 
 def create_forecasting_horizon(horizon):
     current_date = pd.to_datetime('now')
@@ -84,6 +71,9 @@ def create_forecasting_horizon(horizon):
     df['Year'] = df.index.year
     df['Month'] = df.index.month
     df['Day'] = df.index.day
+    df['dayofweek'] = df.index.dayofweek
+    df['quarter'] = df.index.quarter
+    df['dayofyear'] = df.index.dayofyear
     
     # Wiederherstellen der 'Datum'-Spalte
     df['Datum'] = df.index
