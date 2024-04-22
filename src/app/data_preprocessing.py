@@ -80,6 +80,6 @@ def create_forecasting_horizon(horizon):
     df = df.drop('Datum', axis=1)
     
     # Umsortierung der Spalten
-    df = df[['lag_2__Abgabe_movavg', 'lag_4__Abgabe_movavg', 'lag_6__Abgabe_movavg', 'deklarationen_pro_tag', 'Year', 'Month', 'Day']]
+    df = df[['lag_2__Abgabe_movavg', 'lag_4__Abgabe_movavg', 'lag_6__Abgabe_movavg', 'deklarationen_pro_tag', 'Year', 'Month', 'Day', 'dayofweek', 'quarter', 'dayofyear']]
     
     return df

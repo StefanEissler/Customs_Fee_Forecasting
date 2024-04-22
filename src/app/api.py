@@ -127,7 +127,7 @@ def evaluate():
         existing_evaluation.to_csv(filename_matrix, index=False)
     else:
         validation_df.to_csv(filename_matrix, index=False)
-    
+        
     response_data = {
         'success': True,
         'message': f'Evaluation with {modeltype} for {customer_id} generated successfully',

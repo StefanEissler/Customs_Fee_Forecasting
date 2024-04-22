@@ -1,23 +1,17 @@
 from abc import ABC, abstractmethod
 
-from neuralforecast import NeuralForecast
 import numpy as np
-import pandas as pd
 from sktime.forecasting.arima import AutoARIMA
 from sktime.forecasting.ets import AutoETS
 from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
 from sktime.forecasting.neuralforecast import NeuralForecastLSTM
 from sktime.forecasting.neuralforecast import NeuralForecastRNN
 from neuralforecast.losses.pytorch import MAE
-from sktime.forecasting.compose import AutoEnsembleForecaster
-from sktime.forecasting.naive import NaiveForecaster
 
 from sktime.forecasting.base import ForecastingHorizon
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.metrics import mean_absolute_error, r2_score
 from sktime.performance_metrics.forecasting import mean_absolute_percentage_error
 from sktime.performance_metrics.forecasting import MeanAbsoluteScaledError
-
-from data_preprocessing import create_forecasting_horizon
 
 class Evaluator:
     @staticmethod
@@ -26,7 +20,6 @@ class Evaluator:
         y_train = np.array(y_train)
         
         mae = mean_absolute_error(y_true=y_test, y_pred=prediction)
-        #mse = mean_squared_error(y_true=y_test, y_pred=prediction)
         r2 = r2_score(y_true=y_test, y_pred=prediction)
         forecast_bias = (prediction.sum() - y_test.sum()) / y_test.sum() * 100 
         mape = mean_absolute_percentage_error(y_true=y_test, y_pred=prediction, symmetric=True)
@@ -82,7 +75,7 @@ class ETSModel(BaseModel):
         super().__init__(trained_model)
 
     def train(self, X_train, y_train):
-        model_ETS = AutoETS(auto=True, random_state=120)
+        model_ETS = AutoETS(auto=True, error="add", trend="add", seasonal="add", random_state=120)
         model_ETS.fit(y=y_train)
         self.trained_model = model_ETS
         return model_ETS
