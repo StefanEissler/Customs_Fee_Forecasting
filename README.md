@@ -15,15 +15,20 @@ oder
 ## Projektsturktur
 
 1. Data - Ablage von Beispieldaten
-a. processed - Bearbeitete Datensätze 
-b. raw - Datensätze nach AEB Format
-2. models - Speichern der trainierten Modelle
+    a. evaluation - Evaluationsmatrix nach "/evaluation" Route
+    b. predicition - Ergebnisse zum test nach "/evaluation" Route
+    c. raw - Datensätze nach AEB Format
+2. models - Speichern der trainierten Modelle nach "/train" Route
 3. notebooks - Datenuntersuchung mittels Jupyter Notebooks
 4. src - root der App (Flask Server)
 
 ## Projekt Architektur
 
-Die beste Performance auf Zeitreihendaten hatten X Modelle. Diese werden nun in der Ensembling Module trainiert. Durch das X Objekt im X Modul können neue Modelle trainiert und gespeichert werden. Über die API können diese nun trainiert und predictions eingereicht werden.
+Die beste Performance auf Zeitreihendaten hatten Forest-Modelle. Dadurch werden diese in den "/train" und "/forecast" Routen eingesetzt. Über die API können diese nun trainiert und forecasts eingereicht werden. 
+Über die "/evaluate" Route können Modelle getestet und verglichen werden nach der API Beschreibung durch eine train-test-split mit einem Forecasting Horizont von 90 Tagen.
+Durch das erweiterbare BaseModel-Objekt im "src/app/models.py" können neue Modelle programmiert und eingesetzt werden.
+Durch die "src/app/modelio.py" werden trainierte Modelle im "/models" Ordner abgelegt. Auch die übergeordnete ModelIO-Klasse ist abstrakt und erweiterbar durch weitere Ablagemöglichkeiten in der Cloud oder in einer Datenbank. 
+In "src/app/data_preprocessing.py" werden Hilsmethoden für die API definiert. Die API mit dem Flask Server befindet sich in "src/app/api.py".
 
 ## Run Application
 
@@ -99,7 +104,7 @@ Erstellt einen Forecast für einen Kunden über einen gewissen Horizont.
 - Kundenname
 
 #### horizon
-- gibt den Horizont des Forecasts in Tagen
+- Horizont des Forecasts in Tagen
 
 ### Response
 
@@ -138,8 +143,9 @@ Erstellt einen Forecast für einen Kunden über einen gewissen Horizont.
     }
 
 
-### Evaluationsmatrix erstellen
+## Evaluationsmatrix erstellen
 Trainiert ein Model mit einem train test split und gibt die Ergebnisse der Evaluation aus.
+Außerdem speichert es die Ergebnisse der Kennzahlen in "data/evaluation/..." und die Prediction in "data/prediction/..."
 
 `POST /evaluate`
 
@@ -167,8 +173,8 @@ Trainiert ein Model mit einem train test split und gibt die Ergebnisse der Evalu
     }
 
 #### modeltype
-- ARIMA
-- ETS
+- arima
+- ets
 - forest
 - xgboost
 - rnn
@@ -186,23 +192,22 @@ Trainiert ein Model mit einem train test split und gibt die Ergebnisse der Evalu
     Server: Werkzeug/3.0.1 Python/3.10.12
     Date: Mon, 08 Apr 2024 13:18:33 GMT
     Content-Type: application/json
-    Content-Length: 333
+    Content-Length: 366
     Connection: close
 
-    [{
-        "message": "ets for example trained and saved successfully",
+    {
+        "message": "Evaluation with lstm for customer_d generated successfully",
         "success": true,
-        "validation_result": {
-            "Forecast Accuracy (%)": 10.538043968968688,
-            "Forecast Bias": -1974.3481661932624,
-            "MAE": 3880.514737872459,
-            "MSE": 39054173.60055442,
-            "meanMASE": 9.48942709809044,
-            "r2": 0.4348866438055564
+        "validation_matrix": {
+            "Forecast Bias (%)": -15.236810684801814,
+            "Mean Absolute Error": 11132.229894097238,
+            "Mean Absolute Percentage Error (%)": 26.628031891865163,
+            "Mean Absolute Scaled Error": 2.811757115144287,
+            "r2": -0.29637923057041315
         }
-    }]
+    }
 
-## Libaries
+# Main Libaries
 
 - pandas [https://pandas.pydata.org/]
 - numpy [https://numpy.org/doc/stable/index.html]
