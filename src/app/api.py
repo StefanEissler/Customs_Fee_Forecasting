@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify
 from sklearn.model_selection import train_test_split
 from data_preprocessing import prep_data, create_forecasting_horizon
 from models import ArimaModel, ETSModel, ForestModel, LSTMModel, RNNModel, XGBoostModel
-from modelio import ModelIO
+from modelio import LocalModelIO
 from models import Evaluator
 
 app = Flask(__name__)
@@ -28,8 +28,8 @@ def train_model():
         modeltype = 'forest' 
         forestmodel = ForestModel()
         forestmodel.train(X, y)
-        modelio = ModelIO()
-        modelio.save_model(forestmodel, customer_id=customer_id, model_type=modeltype)
+        modelio = LocalModelIO()
+        modelio.save_model(forestmodel, customer_id, modeltype)
     except Exception as e:
         return jsonify({'success': False, 'message': 'Model Training failed', 'Exception': str(e)}), 500
     
@@ -51,9 +51,9 @@ def forecast():
     #Forecast
     try:
         modeltype = 'forest'
-        foestmodel = ForestModel()
-        foestmodel.load_model(customer_id, modeltype)
-        predictions = foestmodel.forecast(df)
+        modelio = LocalModelIO()
+        forestmodel = modelio.load_model(customer_id, modeltype)
+        predictions = forestmodel.forecast(df)
         df.index = df.index.strftime('%Y-%m-%d')
         predictions_dict = {str(date): prediction for date, prediction in zip(df.index, predictions)}
     except Exception as e:
