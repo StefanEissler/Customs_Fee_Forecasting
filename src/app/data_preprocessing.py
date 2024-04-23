@@ -29,7 +29,6 @@ def prep_data(data):
     abgabe_pro_tag = abgabe_pro_tag.resample('D').asfreq().fillna(0)
     
     # Abgabe gleitender Durchschnitt
-    # Imputer?!
     abgabe_pro_tag['Abgabe_movavg'] = abgabe_pro_tag.Abgabe.rolling(window=7).mean()
     
     # Erstellen von lag features
@@ -58,6 +57,7 @@ def create_forecasting_horizon(horizon):
     current_date = pd.to_datetime('now')
     # Erstellen des Datumsindexes für den Horizon
     horizon_dates = pd.date_range(start=current_date, periods=horizon, freq='D') + pd.Timedelta(days=1)  # Beginnen Sie am nächsten Tag
+    
     # Erstellen des DataFrame für den Forecast-Horizont
     df = pd.DataFrame(index=horizon_dates)
     
@@ -79,7 +79,7 @@ def create_forecasting_horizon(horizon):
     df['Datum'] = df.index
     df = df.drop('Datum', axis=1)
     
-    # Umsortierung der Spalten
+    # Sortierung der Spalten
     df = df[['lag_2__Abgabe_movavg', 'lag_4__Abgabe_movavg', 'lag_6__Abgabe_movavg', 'deklarationen_pro_tag', 'Year', 'Month', 'Day', 'dayofweek', 'quarter', 'dayofyear']]
     
     return df

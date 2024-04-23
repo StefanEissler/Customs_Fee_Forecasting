@@ -15,17 +15,19 @@ oder
 ## Projektsturktur
 
 1. Data - Ablage von Beispieldaten
-    a. evaluation - Evaluationsmatrix nach "/evaluation" Route
-    b. predicition - Ergebnisse zum test nach "/evaluation" Route
-    c. raw - Datensätze nach AEB Format
+- evaluation - Evaluationsmatrix nach "/evaluation" Route
+- predicition - Ergebnisse zum test nach "/evaluation" Route
+- raw - Datensätze nach AEB Format
 2. models - Speichern der trainierten Modelle nach "/train" Route
 3. notebooks - Datenuntersuchung mittels Jupyter Notebooks
-4. src - root der App (Flask Server)
+4. src/app - root der App (Flask Server)
 
 ## Projekt Architektur
 
-Die beste Performance auf Zeitreihendaten hatten Forest-Modelle. Dadurch werden diese in den "/train" und "/forecast" Routen eingesetzt. Über die API können diese nun trainiert und forecasts eingereicht werden. 
-Über die "/evaluate" Route können Modelle getestet und verglichen werden nach der API Beschreibung durch eine train-test-split mit einem Forecasting Horizont von 90 Tagen.
+Die beste Performance auf Zeitreihendaten der AEB Zolldaten hatten Forest-Modelle. Dadurch werden diese in den "/train" und "/forecast" Routen eingesetzt. Über die API können diese nun trainiert und forecasts erstellt werden.
+Beim aufrufen der train-Methode wird ein Model trainiert und mit Pickle im "/models" Ordner abgelegt. Beim Forecasting wird dieses aufgerufen und ein Forecast ab dem jetzigen Tag in den angebgenen Horizont angegeben. 
+Wenn ein Model mit der selben Kunden-ID nochmal trainiert wird, überschreibt die ModelIO-Klasse das alte Model.
+Über die "/evaluate" Route können Modelle getestet und verglichen werden. Es wird ein train-test-split mit einem Forecasting Horizont von 90 Tagen vorgenommen und mit einer statischen evaluate-Methode des Evaluator ausgewertet.
 Durch das erweiterbare BaseModel-Objekt im "src/app/models.py" können neue Modelle programmiert und eingesetzt werden.
 Durch die "src/app/modelio.py" werden trainierte Modelle im "/models" Ordner abgelegt. Auch die übergeordnete ModelIO-Klasse ist abstrakt und erweiterbar durch weitere Ablagemöglichkeiten in der Cloud oder in einer Datenbank. 
 In "src/app/data_preprocessing.py" werden Hilsmethoden für die API definiert. Die API mit dem Flask Server befindet sich in "src/app/api.py".

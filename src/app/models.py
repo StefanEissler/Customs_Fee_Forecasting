@@ -142,7 +142,6 @@ class LSTMModel(BaseModel):
                 max_steps=120,
                 local_scaler_type='robust',
                 loss=MAE(),
-                #hist_exog_list=["deklarationen_pro_tag", "lag_2__Abgabe_movavg", "lag_4__Abgabe_movavg", "lag_6__Abgabe_movavg"],
                 num_workers_loader=11,
             )
         lstm_model.fit(y_train, X=X_train, fh=X_test.index)
@@ -154,6 +153,8 @@ class LSTMModel(BaseModel):
         return prediction
 
 '''
+# Ensemble Methdoik als weitere Forecasting Methodik
+# Diese kann in Zukunft noch implementiert werden
 class EnsembleModel(BaseModel):
     def __init__(self, trained_model=None):
         super().__init__(trained_model)
