@@ -24,13 +24,11 @@ oder
 
 ## Projekt Architektur
 
-Die beste Performance auf Zeitreihendaten der AEB Zolldaten hatten Forest-Modelle. Dadurch werden diese in den "/train" und "/forecast" Routen eingesetzt. Über die API können diese nun trainiert und forecasts erstellt werden.
-Beim aufrufen der train-Methode wird ein Model trainiert und mit Pickle im "/models" Ordner abgelegt. Beim Forecasting wird dieses aufgerufen und ein Forecast ab dem jetzigen Tag in den angebgenen Horizont angegeben. 
-Wenn ein Model mit der selben Kunden-ID nochmal trainiert wird, überschreibt die ModelIO-Klasse das alte Model.
-Über die "/evaluate" Route können Modelle getestet und verglichen werden. Es wird ein train-test-split mit einem Forecasting Horizont von 90 Tagen vorgenommen und mit einer statischen evaluate-Methode des Evaluator ausgewertet.
-Durch das erweiterbare BaseModel-Objekt im "src/app/models.py" können neue Modelle programmiert und eingesetzt werden.
-Durch die "src/app/modelio.py" werden trainierte Modelle im "/models" Ordner abgelegt. Auch die übergeordnete ModelIO-Klasse ist abstrakt und erweiterbar durch weitere Ablagemöglichkeiten in der Cloud oder in einer Datenbank. 
-In "src/app/data_preprocessing.py" werden Hilsmethoden für die API definiert. Die API mit dem Flask Server befindet sich in "src/app/api.py".
+Die beste Performance auf Zeitreihendaten der AEB-Zolldaten hatten Forest-Modelle. Daher werden diese in den "/train" und "/forecast" Routen eingesetzt. Über die API können diese nun trainiert und Prognosen erstellt werden. 
+Beim Aufrufen der train-Methode wird ein Modell trainiert und mit Pickle im "/models" Ordner abgelegt. Beim Forecasting wird dieses aufgerufen und eine Prognose ab dem aktuellen Tag im angegebenen Horizont erstellt. Wenn ein Modell mit derselben Kunden-ID erneut trainiert wird, überschreibt die ModelIO-Klasse das alte Modell. 
+Über die "/evaluate" Route können Modelle getestet und verglichen werden. Es wird ein Train-Test-Split mit einem Forecasting-Horizont von 90 Tagen durchgeführt und mit einer statischen evaluate-Methode des Evaluators ausgewertet. 
+Durch das erweiterbare BaseModel-Objekt in "src/app/models.py" können neue Modelle programmiert und eingesetzt werden. Durch die "src/app/modelio.py" werden trainierte Modelle im "/models" Ordner abgelegt. Auch die übergeordnete ModelIO-Klasse ist abstrakt und erweiterbar durch weitere Ablagemöglichkeiten in der Cloud oder in einer Datenbank. 
+In "src/app/data_preprocessing.py" werden Hilfsmethoden für die API definiert. Die API mit dem Flask Server befindet sich in "src/app/api.py".
 
 ## Run Application
 
@@ -43,7 +41,7 @@ Trainiert ein Model und legt es mit dem Kundenname ab.
 
 `POST /train`
 
-    curl -i -H 'Accept: application/json' http://localhost:5000/predict
+    curl -i -H 'Accept: application/json' http://localhost:5000/train
 
 ### Request body
 
