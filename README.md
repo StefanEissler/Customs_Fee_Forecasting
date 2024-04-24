@@ -67,7 +67,7 @@ Trainiert ein Model und legt es mit dem Kundenname ab.
 - Kundenname
 
 #### data
-- Data in AEB Format as JSON
+- Daten im AEB-Forecast-Format
 
 ### Response
 
@@ -84,7 +84,7 @@ Trainiert ein Model und legt es mit dem Kundenname ab.
     }]
 
 ## Forecast erstellen
-Erstellt einen Forecast für einen Kunden über einen gewissen Horizont.
+Erstellt einen Forecast für einen Kunden über einen angegebenen Horizont.
 
 ### Request
 
@@ -104,7 +104,7 @@ Erstellt einen Forecast für einen Kunden über einen gewissen Horizont.
 - Kundenname
 
 #### horizon
-- Horizont des Forecasts in Tagen
+- Horizont des Forecast in Tagen
 
 ### Response
 
@@ -144,8 +144,8 @@ Erstellt einen Forecast für einen Kunden über einen gewissen Horizont.
 
 
 ## Evaluationsmatrix erstellen
-Trainiert ein Model mit einem train test split und gibt die Ergebnisse der Evaluation aus.
-Außerdem speichert es die Ergebnisse der Kennzahlen in "data/evaluation/..." und die Prediction in "data/prediction/..."
+Trainiert ein Model mit einem train-test-split und gibt die Ergebnisse der Evaluation aus.
+Außerdem speichert es die Ergebnisse der Kennzahlen in "data/evaluation" und die Test und Forgecastete Zeitreihe in "data/prediction"
 
 `POST /evaluate`
 
@@ -184,7 +184,7 @@ Außerdem speichert es die Ergebnisse der Kennzahlen in "data/evaluation/..." un
 - Kundenname
 
 #### data
-- Data in AEB Format als JSON
+- Daten im AEB-Forecast-Format
 
 ### Response
 
